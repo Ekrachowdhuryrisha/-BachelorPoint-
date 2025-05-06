@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
+from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.tokens import default_token_generator
 
@@ -78,6 +79,7 @@ def HouseDetailsPage(request, property_id):
     if request.method == 'POST':
         tenant, created = Tenant.objects.get_or_create(user=request.user)
         booking = BookingRequest.objects.create(house=house, tenant=tenant)
+        return redirect(reverse('HouseOwnerLandingPage'))
     return render(request, 'htmlPages/HouseDetailsPage.html', {'house': house})
 
 @login_required
@@ -85,8 +87,8 @@ def HouseOwnerLandingPage(request, section='bookings'):
     if request.user.user_type != 'house_owner':
         return redirect('Home')
 
-    houses = HouseOwner.objects.filter(user=request.user)  # Fetch houses for all sections
-    context = {'houses': houses}  # Add houses to context for all sections
+    houses = HouseOwner.objects.filter(user=request.user)
+    context = {'houses': houses}
 
     if section == 'bookings':
         booking_requests = BookingRequest.objects.all().order_by('-date_requested')
@@ -113,23 +115,24 @@ def HouseOwnerLandingPage(request, section='bookings'):
                     image3=house.image3
                 )
                 messages.success(request, 'House added successfully and is now visible to bachelors.')
-                return redirect('HouseOwnerLandingPageSection', section='listings')
+                return redirect(reverse('HouseOwnerLandingPageSection', kwargs={'section': 'listings'}))
             else:
                 messages.error(request, 'Please fill all required fields correctly.')
         context.update({'form': form, 'section': 'add-house'})
     elif section == 'delete-house':
-        if request.method == 'POST' and 'delete_house' in request.POST:
+        if request.method == 'POST':
             house_id = request.POST.get('house_id')
             if not house_id or not house_id.isdigit():
                 messages.error(request, 'Invalid house ID.')
-                return redirect('HouseOwnerLandingPageSection', section='delete-house')
+                return redirect(reverse('HouseOwnerLandingPageSection', kwargs={'section': 'delete-house'}))
             if not HouseOwner.objects.filter(id=house_id, user=request.user).exists():
                 messages.error(request, 'House not found or you do not have permission to delete it.')
-                return redirect('HouseOwnerLandingPageSection', section='delete-house')
+                return redirect(reverse('HouseOwnerLandingPageSection', kwargs={'section': 'delete-house'}))
             house = HouseOwner.objects.get(id=house_id, user=request.user)
+            AvailableHouse.objects.filter(Property_id=house.PropertyId).delete()
             house.delete()
             messages.success(request, 'House deleted successfully.')
-            return redirect('HouseOwnerLandingPageSection', section='delete-house')
+            return redirect(reverse('HouseOwnerLandingPageSection', kwargs={'section': 'delete-house'}))
         context.update({'section': 'delete-house'})
     elif section == 'complaints':
         context.update({'section': 'complaints'})
@@ -146,9 +149,12 @@ def HouseOwnerLandingPage(request, section='bookings'):
                 booking_request.status = 'Declined'
                 messages.success(request, f'Request #{request_id} has been declined.')
             booking_request.save()
-            return redirect('HouseOwnerLandingPage', section='bookings')
+            return redirect(reverse('HouseOwnerLandingPageSection', kwargs={'section': 'bookings'}))
 
     return render(request, 'htmlPages/HouseOwnerLandingPage.html', context)
+
+def UserDetailsPage(request):
+    return render(request, template_name='htmlPages/UserDetailsPage.html')
     
 
 def UserDetailsPage(request):

@@ -10,12 +10,11 @@
     padding: 0;
   }
   .tabs {
-    display:flex;
+    display: flex;
     gap: 1rem;
     padding: 1.5rem 2rem;
     background: #f5f0e0;
-    margin-bottom: 1rem; /* Space before next section */
-    
+    margin-bottom: 1rem;
   }
   .tabs a {
     background: #d9d9d9;
@@ -57,7 +56,7 @@
     gap: 20px;
     padding: 1rem 2rem;
     background: #f5f0e0;
-    margin-bottom: 1rem; /* Space before content */
+    margin-bottom: 1rem;
   }
   .action-buttons a {
     padding: 10px 20px;
@@ -126,6 +125,9 @@
     margin-top: 5px;
     font-weight: bold;
   }
+  .status-pending { color: #ff9800; }
+  .status-accepted { color: #4caf50; }
+  .status-declined { color: #f44336; }
   .form-container {
     max-width: 400px;
     margin: 0 auto;
@@ -205,129 +207,127 @@
   }
 </style>
 
+<!-- First Line: Tabs -->
+<section class="tabs">
+  <a href="{% url 'HouseOwnerLandingPage' %}" class="bookings-btn {% if section == 'bookings' %}active{% endif %}">Bookings</a>
+  <a href="{% url 'HouseOwnerLandingPageSection' section='listings' %}" class="listings-btn {% if section == 'listings' %}active{% endif %}">Listings ({{ houses|length }})</a>
+  <a href="{% url 'HouseOwnerLandingPageSection' section='complaints' %}" class="complaints-btn {% if section == 'complaints' %}active{% endif %}">Complaints</a>
+</section>
 
-  <!-- First Line: Tabs -->
-  <section class="tabs">
-    <a href="{% url 'HouseOwnerLandingPage' %}" class="bookings-btn {% if section == 'bookings' %}active{% endif %}">Bookings</a>
-    <a href="{% url 'HouseOwnerLandingPageSection' section='listings' %}" class="listings-btn {% if section == 'listings' %}active{% endif %}">Listings ({{ houses|length }})</a>
-    <a href="{% url 'HouseOwnerLandingPageSection' section='complaints' %}" class="complainants-btn {% if section == 'complaints' %}active{% endif %}">Complaints</a>
-  </section>
+<!-- Second Line: Action Buttons -->
+<div class="action-buttons">
+  <a href="{% url 'HouseOwnerLandingPageSection' section='add-house' %}" class="add-btn">Add House</a>
+  <a href="{% url 'HouseOwnerLandingPageSection' section='delete-house' %}" class="delete-btn">Delete House</a>
+</div>
 
-  <!-- Second Line: Action Buttons -->
-  <div class="action-buttons">
-    <a href="{% url 'HouseOwnerLandingPageSection' section='add-house' %}" class="add-btn">Add House</a>
-    <a href="{% url 'HouseOwnerLandingPageSection' section='delete-house' %}" class="delete-btn">Delete House</a>
-  </div>
-
-  <!-- Third Line/Part: Content -->
-  <div class="content-section">
-    {% if messages %}
-      <ul class="errorlist">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    {% if section == 'bookings' %}
-      <h2 class="section-title">New Booking Requests ({{ booking_requests|length }})</h2>
-      {% for req in booking_requests %}
-        <div class="request-card">
-          <div class="request-info">
-            <h4>Request #{{ req.id }}</h4>
-            <p>Tenant: {{ req.tenant.get_full_name }}</p>
-            <p>Room: {{ req.room.title }}</p>
-            <p>Date Requested: {{ req.date_requested }}</p>
-            <p class="status">
-              Status: 
-              <span class="
-                {% if req.status == 'Pending' %}status-pending
-                {% elif req.status == 'Accepted' %}status-accepted
-                {% else %}status-declined
-                {% endif %}
-              ">{{ req.status }}</span>
-            </p>
-          </div>
-          <div class="actions">
-            <form method="POST" action="">
-              {% csrf_token %}
-              <input type="hidden" name="request_id" value="{{ req.id }}">
-              <button name="action" value="accept" class="accept-btn">Accept ✔</button>
-              <button name="action" value="decline" class="decline-btn">Decline ✖</button>
-            </form>
-            <button class="chat-btn">💬</button>
-          </div>
-        </div>
-      {% empty %}
-        <p>No booking requests at the moment.</p>
+<!-- Third Line/Part: Content -->
+<div class="content-section">
+  {% if messages %}
+    <ul class="errorlist">
+      {% for message in messages %}
+        <li>{{ message }}</li>
       {% endfor %}
-    {% elif section == 'listings' %}
-      <h2 class="section-title">Your House Listings ({{ houses|length }})</h2>
-      {% for house in houses %}
-        <div class="house-card">
-          <div class="house-info">
-            <h4>{{ house.House_name }}</h4>
-            <p>Location: {{ house.Location }}</p>
-            <p>Category: {{ house.get_category_display }}</p>
-            <p>Price: {{ house.Price }} BDT</p>
-            <p>Availability: {{ house.Availability }}</p>
-          </div>
+    </ul>
+  {% endif %}
+
+  {% if section == 'bookings' %}
+    <h2 class="section-title">New Booking Requests ({{ booking_requests|length }})</h2>
+    {% for req in booking_requests %}
+      <div class="request-card">
+        <div class="request-info">
+          <h4>Request #{{ req.id }}</h4>
+          <p>Tenant: {{ req.tenant.user.username }}</p>
+          <p>Room: {{ req.house.House_name }}</p>
+          <p>Date Requested: {{ req.date_requested }}</p>
+          <p class="status">
+            Status: 
+            <span class="
+              {% if req.status == 'Pending' %}status-pending
+              {% elif req.status == 'Accepted' %}status-accepted
+              {% else %}status-declined
+              {% endif %}
+            ">{{ req.status }}</span>
+          </p>
         </div>
-      {% empty %}
-        <p>No houses listed yet.</p>
-      {% endfor %}
-    {% elif section == 'add-house' %}
-      <h2 class="section-title">Add New House</h2>
-      <div class="form-container">
-        <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% if form.errors %}
-            <ul class="errorlist">
-              {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-              {% for field in form %}
-                {% for error in field.errors %}
-                  <li>{{ field.label }}: {{ error }}</li>
-                {% endfor %}
-              {% endfor %}
-            </ul>
-          {% endif %}
-          {% for field in form %}
-            <div class="form-group">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field }}
-            </div>
-          {% endfor %}
-          <button type="submit">Add House</button>
-        </form>
+        <div class="actions">
+          <form method="POST" action="">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" value="{{ req.id }}">
+            <button type="submit" name="action" value="accept" class="accept-btn">Accept ✔</button>
+            <button type="submit" name="action" value="decline" class="decline-btn">Decline ✖</button>
+          </form>
+          <button class="chat-btn">💬</button>
+        </div>
       </div>
-    {% elif section == 'delete-house' %}
-      <h2 class="section-title">Delete Houses</h2>
-      {% for house in houses %}
-        <div class="house-card">
-          <div class="house-info">
-            <h4>{{ house.House_name }}</h4>
-            <p>Location: {{ house.Location }}</p>
-            <p>Category: {{ house.get_category_display }}</p>
-            <p>Price: {{ house.Price }} BDT</p>
-            <p>Availability: {{ house.Availability }}</p>
-          </div>
-          <div class="actions">
-            <form method="POST" action="">
-              {% csrf_token %}
-              <input type="hidden" name="house_id" value="{{ house.id }}">
-              <button type="submit" class="delete-house-btn">Delete</button>
-            </form>
-          </div>
+    {% empty %}
+      <p>No booking requests at the moment.</p>
+    {% endfor %}
+  {% elif section == 'listings' %}
+    <h2 class="section-title">Your House Listings ({{ houses|length }})</h2>
+    {% for house in houses %}
+      <div class="house-card">
+        <div class="house-info">
+          <h4>{{ house.House_name }}</h4>
+          <p>Location: {{ house.Location }}</p>
+          <p>Category: {{ house.category }}</p>
+          <p>Price: {{ house.Price }} BDT</p>
+          <p>Availability: {{ house.Availability }}</p>
         </div>
-      {% empty %}
-        <p>No houses available to delete.</p>
-      {% endfor %}
-    {% elif section == 'complaints' %}
-      <h2 class="section-title">Complaints</h2>
-      <p>No complaints at the moment.</p>
-    {% endif %}
-  </div>
-
+      </div>
+    {% empty %}
+      <p>No houses listed yet.</p>
+    {% endfor %}
+  {% elif section == 'add-house' %}
+    <h2 class="section-title">Add New House</h2>
+    <div class="form-container">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.errors %}
+          <ul class="errorlist">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% for field in form %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endfor %}
+        <button type="submit">Add House</button>
+      </form>
+    </div>
+  {% elif section == 'delete-house' %}
+    <h2 class="section-title">Delete Houses</h2>
+    {% for house in houses %}
+      <div class="house-card">
+        <div class="house-info">
+          <h4>{{ house.House_name }}</h4>
+          <p>Location: {{ house.Location }}</p>
+          <p>Category: {{ house.category }}</p>
+          <p>Price: {{ house.Price }} BDT</p>
+          <p>Availability: {{ house.Availability }}</p>
+        </div>
+        <div class="actions">
+          <form method="POST" action="">
+            {% csrf_token %}
+            <input type="hidden" name="house_id" value="{{ house.id }}">
+            <button type="submit" class="delete-house-btn">Delete</button>
+          </form>
+        </div>
+      </div>
+    {% empty %}
+      <p>No houses available to delete.</p>
+    {% endfor %}
+  {% elif section == 'complaints' %}
+    <h2 class="section-title">Complaints</h2>
+    <p>No complaints at the moment.</p>
+  {% endif %}
+</div>
 {% endblock %}
