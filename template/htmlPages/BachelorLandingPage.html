@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Bachelor Dashboard{% endblock %}
+{% block content %}
+<style>
+  .main-container {
+    display: flex;
+    background-color: #fef1db;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .profile-card {
+    width: 250px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    height: fit-content;
+  }
+  
+  .profile-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-card .profile-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-card p {
+    margin: 0.5rem 0;
+  }
+  
+  .profile-card a {
+    color: #4caf50;
+    text-decoration: none;
+    margin: 0.5rem 0;
+    display: inline-block;
+  }
+  
+  .rooms-food-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .scrollable-section {
+    position: relative;
+  }
+  
+  .scrollable-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .scrollable-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .room-card, .food-card {
+    width: 250px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  
+  .room-card img, .food-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .room-card h3, .food-card h3 {
+    font-size: 1.2rem;
+    margin: 0.5rem 1rem;
+  }
+  
+  .room-card p, .food-card p {
+    font-size: 0.9rem;
+    margin: 0.5rem 1rem;
+    color: #555;
+  }
+  
+  .room-card a.btn, .food-card a.btn {
+    display: block;
+    margin: 0.5rem 1rem 1rem;
+    padding: 0.5rem;
+    background-color: #ff9800;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .house-card {
+    background: #e0e0e0;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .house-images img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 0.5rem;
+  }
+  .house-info {
+    flex: 1;
+  }
+  .book-btn {
+    background: #4caf50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .book-btn:hover {
+    background: #45a049;
+  }
+  .scroll-arrow {
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+    background-color: orange;
+    border: none;
+    color: white;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+    padding: 4px 10px;
+  }
+</style>
+<div class="main-container">
+  <!-- Profile Card -->
+  <div class="profile-card">
+    <h2>Profile</h2>
+    <div class="profile-icon">👤</div>
+    <p>{{ user.email }}</p>
+    <a href="{% url 'ProfilePage' %}">My Profile</a><br>
+  </div>
+
+  <!-- Room and Food Sections -->
+  <div class="rooms-food-wrapper">
+    <!-- Houses -->
+    <div class="scrollable-section">
+      <div class="section-title">Available Houses</div>
+      <div class="scrollable-container" id="housesContainer">
+        {% for house in houses %}
+        <div class="house-card">
+          <div class="house-images">
+            <img src="{{ house.image1.url }}" alt="Image 1">
+          </div>
+          <div class="house-info">
+            <h3>{{ house.House_name }}</h3>
+            
+            <p>Location: {{ house.Location }}</p>
+          
+            <p>Price: {{ house.Price }} BDT</p>
+            <a href="{% url 'HouseDetailsPage' property_id=house.Property_id %}" class="book-btn">Book Now</a>
+          </div>
+        </div>
+      {% empty %}
+        <p>No houses available.</p>
+      {% endfor %}
+      </div>
+      <button class="scroll-arrow" onclick="scrollRight('housesContainer')">›</button>
+    </div>
+
+    <!-- Foods -->
+    <div class="scrollable-section">
+      <div class="section-title">Available Foods</div>
+      <div class="scrollable-container" id="foodsContainer">
+        {% for food in foods %}
+        <div class="food-card">
+          <img src="{{ food.image.url }}" alt="{{ food.name }}">
+          <h3>{{ food.name }}</h3>
+          <p>Location: {{ food.location }}</p>
+          <p>{{ food.details }}</p>
+          <a href="{% url 'FoodDetails' food.id %}" class="btn btn-warning">Order Now</a>
+        </div>
+        {% empty %}
+        <p>No foods available.</p>
+        {% endfor %}
+      </div>
+      <button class="scroll-arrow" onclick="scrollRight('foodsContainer')">›</button>
+    </div>
+  </div>
+</div>
+     
+<script>
+  function scrollRight(containerId) {
+    const container = document.getElementById(containerId);
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  }
+</script>
+{% endblock %}

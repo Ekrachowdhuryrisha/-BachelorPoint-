@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .details-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #e0e0e0;
+    border-radius: 8px;
+  }
+  .house-images img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  .book-form {
+    margin-top: 1rem;
+  }
+  .book-btn {
+    background: #4caf50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .book-btn:hover {
+    background: #45a049;
+  }
+</style>
+
+<div class="details-container">
+  <h2>{{ house.House_name }}</h2>
+  <div class="house-images">
+    <img src="{{ house.image1.url }}" alt="Image 1">
+    {% if house.image2 %}<img src="{{ house.image2.url }}" alt="Image 2">{% endif %}
+    {% if house.image3 %}<img src="{{ house.image3.url }}" alt="Image 3">{% endif %}
+  </div>
+  <p><strong>Property ID:</strong> {{ house.Property_id }}</p>
+  <p><strong>Location:</strong> {{ house.Location }}</p>
+  <p><strong>Category:</strong> {{ house.Category }}</p>
+  <p><strong>Price:</strong> {{ house.Price }} BDT</p>
+  <p><strong>Availability:</strong> {{ house.Availability }}</p>
+  <form method="post" class="book-form">
+    {% csrf_token %}
+    <button type="submit" class="book-btn">Book Now</button>
+  </form>
+</div>
+{% endblock %}

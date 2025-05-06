@@ -1,0 +1,19 @@
+.container {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.images img {
+    width: 200px;
+    margin-right: 15px;
+    border-radius: 10px;
+}
+
+.details {
+    list-style: none;
+    padding: 0;
+}
+
+.details li {
+    margin: 10px 0;
+}

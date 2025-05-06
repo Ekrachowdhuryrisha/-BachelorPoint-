@@ -1,0 +1,45 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    
+</head>
+<body>
+
+    <div class="page-wrapper">
+      {% include 'navbar.html' %}
+  
+      <main class="page-content">
+        {% block content %}
+        
+        {% endblock %}
+      </main>
+      {% include 'footer.html' %}
+    </div>
+  </body>
+  </html>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .page-content {
+    flex: 1;
+  }
+</style>
+
+
+

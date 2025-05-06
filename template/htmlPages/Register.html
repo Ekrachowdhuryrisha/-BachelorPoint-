@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<style>
+/* Container around the form */
+.register-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fef7ec;
+    padding: 40px 20px;
+}
+
+/* Form box */
+.register-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Heading */
+.register-box h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333333;
+}
+
+/* Error message */
+.message {
+    background-color: #ffe6e6;
+    color: #b30000;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Labels */
+.register-box label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Inputs and selects */
+/* Style for all input and select fields */
+.register-box input,
+.register-box select {
+    width: 100%;
+    padding: 10px 12px;
+    height: 44px; /* Ensures consistent height */
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    appearance: none; /* Normalizes select style in most browsers */
+}
+
+/* Optional: Add an arrow icon to select dropdowns for consistent appearance */
+.register-box select {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'6'%20viewBox%3D'0%200%2010%206'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%206%205-6z'%20fill%3D'%23333'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+/* Focus style */
+.register-box input:focus,
+.register-box select:focus {
+    border-color: #00897b;
+    box-shadow: 0 0 5px rgba(0, 137, 123, 0.2);
+    outline: none;
+}
+
+/* Register button */
+.register-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #00796b;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #004d40;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+    .register-box {
+        padding: 25px;
+    }
+
+    .register-box h2 {
+        font-size: 22px;
+    }
+}
+
+</style>
+<div class="register-wrapper">
+  <div class="register-box">
+    <h2>Create an Account</h2>
+
+    {% if form.errors %}
+      <div class="message">
+        {{ form.errors }}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="{{ form.username.id_for_label }}">Username</label>
+      {{ form.username }}
+
+      <label for="{{ form.email.id_for_label }}">Email</label>
+      {{ form.email }}
+
+      <label for="{{ form.user_type.id_for_label }}">User Type</label>
+      {{ form.user_type }}
+
+      <label for="{{ form.password1.id_for_label }}">Password</label>
+      {{ form.password1 }}
+
+      <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+      {{ form.password2 }}
+
+      <button type="submit" class="register-btn">Register</button>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

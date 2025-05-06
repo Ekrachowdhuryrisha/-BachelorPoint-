@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Food Details{% endblock %}
+{% block content %}
+<style>
+  .food-details-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .food-details-container img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  .food-details-container h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+  }
+  .food-details-container p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+  }
+  .order-form {
+    margin-top: 1rem;
+  }
+  .order-form input {
+    padding: 0.5rem;
+    margin-right: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  .order-form button {
+    padding: 0.75rem 1.5rem;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .order-form button:hover {
+    background-color: #f57c00;
+  }
+  .message {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+</style>
+
+<div class="food-details-container">
+  <img src="{{ food.image.url }}" alt="{{ food.name }}">
+  <h2>{{ food.name }}</h2>
+  <p><strong>Location:</strong> {{ food.location }}</p>
+  <p><strong>Details:</strong> {{ food.details }}</p>
+  <p><strong>Duration:</strong> {{ food.duration }}</p>
+  <p><strong>Meals per Day:</strong> {{ food.meals_per_day }}</p>
+  <p><strong>Price:</strong> {{ food.price }}</p>
+  <form method="POST" class="order-form">
+    {% csrf_token %}
+    <input type="number" name="quantity" min="1" value="1" required>
+    <button type="submit">Place Order</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+   /* Full page reset and styling */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f3e7; /* Soft off-white */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Main container splits page in half */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  padding: 0 60px;
+}
+
+/* Left side: Logo + title */
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 700px;
+  margin-right: 50px;
+}
+
+
+
+
+/* Right side: Text + register */
+.right-section {
+  text-align: left;
+}
+
+.prompt {
+  font-size: 28px;
+  color: #000;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Grouping arrow + button */
+.register-group {
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  font-size: 40px;
+  margin-right: 20px;
+  animation: slideRight 1s infinite alternate;
+  color: black;
+}
+
+/* Button styling */
+.register-button {
+  padding: 12px 30px;
+  background-color: #e4dfd1;
+  border: none;
+  border-radius: 30px;
+  text-decoration: none;
+  color: #000;
+  font-size: 22px;
+  font-weight: 500;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+  background-color: #d8d2c2;
+}
+
+/* Arrow Animation */
+@keyframes slideRight {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(10px); }
+}
+

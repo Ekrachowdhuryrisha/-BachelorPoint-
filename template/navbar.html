@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<nav style="display: flex; align-items: center; justify-content: space-between; padding: 0.5px 30px; background-color: #e7f6f9;">
+
+  <!-- Logo and Title -->
+  <div style="display: flex; align-items: center;">
+      <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 70px; margin-right: 20px;">
+      
+  </div>
+
+  <!-- Navigation Links and Profile -->
+  <div style="display: flex; align-items: center; gap: 40px;">
+      <a href="{% url 'Home' %}" style="text-decoration: none; color: #1a8c76; font-weight: bold;">Home</a>
+      <a href="{% url 'AboutUs' %}" style="text-decoration: none; color: #1a8c76; font-weight: bold;">About Us</a>
+      <a href="{% url 'ContactUs' %}" style="text-decoration: none; color: #1a8c76; font-weight: bold;">Contact</a>
+      <a href="{% url 'LogIn' %}" style="text-decoration: none; color: #1a8c76; font-weight: bold;">Log In</a>
+      
+      <!-- Profile Button -->
+      <a href="{% url 'ProfilePage' %}">
+      {% if user.profile.image %}
+        <img src="{{ user.profile.image.url }}" alt="Profile" class="navbar-profile-icon">
+      {% else %}
+        <img src="{% static 'images/profile-icon.png' %}" alt="No Image" class="navbar-profile-icon">
+      {% endif %}
+    </a>
+  </div>
+
+</nav>
+<style>
+    .navbar-profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+</style>

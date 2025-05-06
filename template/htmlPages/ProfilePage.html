@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+  <div class="profile-card">
+    <form id="form-submit" action="" method="POST" enctype="multipart/form-data" class="profile-info">    
+    
+      {% csrf_token %}
+    <div class="profile-photo-section">
+      {% if user.profile.image %}
+        <img src="{{ user.profile.image.url }}" alt="Profile Photo" class="profile-photo" id="profileImage">
+      {% else %}
+        <img src="{% static 'images/profile-icon' %}" alt="No Profile Photo" class="profile-photo" id="profileImage">
+      {% endif %}
+
+      <div class="photo-buttons">
+        <input type="file" id="uploadPhoto" name="image" accept="image/*" style="display: none;">
+
+        <button type="button" onclick="document.getElementById('uploadPhoto').click()">Add Photo</button>
+        <button type="button" onclick="removePhoto()">Delete Photo</button>
+      </div>
+    </div>
+
+      <div class="info-row"><label>Name:</label><input type="text" name="name" value="{{ profile.name }}"></div>
+      <div class="info-row"><label>Email:</label><input type="email" value="{{ user.email }}" readonly></div>
+      <div class="info-row"><label>Mobile No.:</label><input type="text" name="mobile" value="{{ user.profile.mobile }}"></div>
+      <div class="info-row"><label>Gender:</label><input type="text" name="gender" value="{{ user.profile.gender }}"></div>
+      <div class="info-row"><label>Date of Birth:</label><input type="date" name="dob" value="{{ user.profile.dob|date:'Y-m-d' }}"></div>
+      <div class="info-row"><label>Profession:</label><input type="text" name="profession" value="{{ user.profile.profession }}"></div>
+      <div class="info-row"><label>Address:</label><input type="text" name="address" value="{{ user.profile.address }}"></div>
+      <div class="info-row"><label>Blood Group:</label><input type="text" name="blood_group" value="{{ user.profile.blood_group }}"></div>
+
+      <input type="hidden" name="image_changed" id="imageChanged" value="true">
+      <button type="submit" id="form-submit" class="save-button">Save Changes</button>
+    </form>
+  </div>
+</div>
+<script>
+document.getElementById('uploadPhoto').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (file) {
+    document.getElementById('profileImage').src = URL.createObjectURL(file);
+    document.getElementById('imageChanged').value = 'true';
+  }
+});
+
+
+</script>
+<style>
+  .profile-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: #fefefe;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+
+  .profile-photo {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+    margin-bottom: 10px;
+  }
+
+  .photo-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .photo-buttons button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 10px;
+    background-color: #3498db;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .photo-buttons button:hover {
+    background-color: #2980b9;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between;
+  }
+
+  .info-row label {
+    width: 130px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  .info-row input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+  }
+
+  .save-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    background-color: #2ecc71;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .save-button:hover {
+    background-color: #27ae60;
+  }
+
+  @media (max-width: 600px) {
+    .info-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .info-row label {
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    .save-button {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% endblock %}

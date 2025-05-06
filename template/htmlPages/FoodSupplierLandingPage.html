@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% block title %}Food Supplier Dashboard{% endblock %}
+{% block content %}
+<style>
+  body {
+    background: #fdf8e7;
+    font-family: sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: #f5f0e0;
+    position: relative;
+  }
+  .tabs a {
+    background: #d9d9d9;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    display: inline-block;
+  }
+  .tabs a.active {
+    background: #4caf50;
+    color: #fff;
+  }
+  .notification {
+    position: absolute;
+    right: 2rem;
+    top: 1.8rem;
+    background: #fff;
+    border-radius: 50%;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #333;
+  }
+  .food-buttons {
+    display: flex;
+    gap: 20px;
+    padding: 1rem 2rem;
+  }
+  .food-buttons a, .food-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4caf50;
+    text-decoration: none;
+  }
+  .food-buttons button.delete {
+    background-color: #f44336;
+  }
+  .orders, .bills, .complaints, .add-food, .delete-food {
+    padding: 1rem 2rem;
+  }
+  .orders h2, .bills h2, .complaints h2, .add-food h2, .delete-food h2 {
+    margin-bottom: 1rem;
+  }
+  .order-card, .bill-card, .complaint-card, .food-card {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .order-info, .bill-info, .complaint-info, .food-info {
+    flex: 1 1 60%;
+    margin-right: 1rem;
+  }
+  .order-info h4, .bill-info h4, .complaint-info h4, .food-info h4 {
+    margin: 0 0 5px;
+    font-size: 1.1rem;
+  }
+  .order-info p, .bill-info p, .complaint-info p, .food-info p {
+    margin: 2px 0;
+    font-size: 0.95rem;
+  }
+  .actions button {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .accept { background: #c8e6c9; }
+  .decline { background: #ffcdd2; }
+  .chat { background: #b3e5fc; }
+  .status {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+  .add-food form {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .add-food .form-group {
+    margin-bottom: 1rem;
+  }
+  .add-food .form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    color: #333;
+  }
+  .add-food .form-group input,
+  .add-food .form-group textarea,
+  .add-food .form-group input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  .add-food .form-group input[type="file"] {
+    padding: 0.4rem 0;
+  }
+  .add-food button[type="submit"] {
+    background: #4caf50;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+  }
+  .add-food button[type="submit"]:hover {
+    background: #45a049;
+  }
+  .success-message {
+    color: green;
+  }
+  .error-message {
+    color: red;
+  }
+</style>
+
+<section class="tabs">
+  <a href="{% url 'FoodSupplierLandingPage' section='orders' %}" class="{% if section == 'orders' %}active{% endif %}">Orders</a>
+  <a href="{% url 'FoodSupplierLandingPage' section='bills' %}" class="{% if section == 'bills' %}active{% endif %}">Bills</a>
+  <a href="{% url 'FoodSupplierLandingPage' section='complaints' %}" class="{% if section == 'complaints' %}active{% endif %}">Complaints</a>
+  <div class="notification">{{ orders.count }}</div>
+</section>
+
+<div class="food-buttons">
+  <a href="{% url 'FoodSupplierLandingPage' section='add-food' %}">Add Food</a>
+  <a href="{% url 'FoodSupplierLandingPage' section='delete-food' %}" class="delete">Delete Food</a>
+</div>
+
+{% if section == 'orders' %}
+<section class="orders">
+  <h2>New Orders ({{ orders.count }})</h2>
+  {% for order in orders %}
+  <div class="order-card">
+    <div class="order-info">
+      <h4>Order #{{ order.order_id }}</h4>
+      <p>Customer: {{ order.customer.username }}</p>
+      <p>Items: {{ order.items }}</p>
+      <p>Time: {{ order.time }}</p>
+      <p class="status" id="status-{{ order.order_id }}">Status: {{ order.status }}</p>
+    </div>
+    <div class="actions">
+      <form method="POST" action="{% url 'update_order_status' order.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="accept">
+        <button type="submit" class="accept">Accept ✔</button>
+      </form>
+      <form method="POST" action="{% url 'update_order_status' order.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="decline">
+        <button type="submit" class="decline">Decline ✖</button>
+      </form>
+      <button class="chat">💬</button>
+    </div>
+  </div>
+  {% empty %}
+  <p>No orders available.</p>
+  {% endfor %}
+</section>
+{% elif section == 'bills' %}
+<section class="bills">
+  <h2>Bills</h2>
+  {% for bill in bills %}
+  <div class="bill-card">
+    <div class="bill-info">
+      <h4>Bill for Order #{{ bill.order.order_id }}</h4>
+      <p>Amount: ${{ bill.amount }}</p>
+      <p>Created: {{ bill.created_at }}</p>
+      <p class="status">Status: {{ bill.status }}</p>
+    </div>
+    <div class="actions">
+      <button class="accept" onclick="updateBillStatus('{{ bill.id }}', 'Paid')">Mark as Paid</button>
+    </div>
+  </div>
+  {% empty %}
+  <p>No bills available.</p>
+  {% endfor %}
+</section>
+{% elif section == 'complaints' %}
+<section class="complaints">
+  <h2>Complaints</h2>
+  {% for complaint in complaints %}
+  <div class="complaint-card">
+    <div class="complaint-info">
+      <h4>Complaint #{{ complaint.id }}</h4>
+      <p>Customer: {{ complaint.customer.username }}</p>
+      <p>Order: {% if complaint.order %}#{{ complaint.order.order_id }}{% else %}N/A{% endif %}</p>
+      <p>Description: {{ complaint.description }}</p>
+      <p>Status: {{ complaint.status }}</p>
+    </div>
+    <div class="actions">
+      <button class="accept" onclick="updateComplaintStatus('{{ complaint.id }}', 'Resolved')">Resolve</button>
+      <button class="decline" onclick="updateComplaintStatus('{{ complaint.id }}', 'Closed')">Close</button>
+    </div>
+  </div>
+  {% empty %}
+  <p>No complaints available.</p>
+  {% endfor %}
+</section>
+{% elif section == 'add-food' %}
+<section class="add-food">
+  <h2>Add New Food Item</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Food</button>
+  </form>
+  {% if messages %}
+  {% for message in messages %}
+  <p class="{% if message.tags == 'success' %}success-message{% else %}error-message{% endif %}">{{ message }}</p>
+  {% endfor %}
+  {% endif %}
+</section>
+{% elif section == 'delete-food' %}
+<section class="delete-food">
+  <h2>Delete Food Items</h2>
+  {% for food in foods %}
+  <div class="food-card">
+    <div class="food-info">
+      <h4>{{ food.name }}</h4>
+      <p>Location: {{ food.location }}</p>
+      <p>Details: {{ food.details }}</p>
+    </div>
+    <div class="actions">
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="food_id" value="{{ food.id }}">
+        <button type="submit" class="decline">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <p>No food items available.</p>
+  {% endfor %}
+</section>
+{% endif %}
+
+<script>
+  function updateBillStatus(billId, status) {
+    document.querySelector(`#bill-${billId} .status`).innerText = 'Status: ' + status;
+    // Optionally, send AJAX request to update backend
+  }
+  function updateComplaintStatus(complaintId, status) {
+    document.querySelector(`#complaint-${complaintId} .status`).innerText = 'Status: ' + status;
+    // Optionally, send AJAX request to update backend
+  }
+</script>
+{% endblock %}

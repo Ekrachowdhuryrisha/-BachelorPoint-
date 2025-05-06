@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+
+<style>
+  .about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .about-header {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .about-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  .team-section {
+    margin-top: 40px;
+  }
+
+  .team-header {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .team-member {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 220px;
+    text-align: center;
+  }
+
+  .team-member img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+
+  .team-member h4 {
+    margin: 10px 0 5px;
+    font-size: 1.2rem;
+    color: #333;
+  }
+
+  .team-member p {
+    font-size: 0.95rem;
+    color: #777;
+  }
+</style>
+
+<div class="about-container">
+  <h1 class="about-header">About Bachelor Point</h1>
+  <p class="about-text">
+    Bachelor Point is dedicated to making the lives of bachelors easier by providing a seamless platform to find housing, food services, and other essential amenities. Whether you are new to the city or looking for a better place to live, we connect you with trusted service providers and verified listings to ensure a comfortable and hassle-free experience.
+  </p>
+
+  <p class="about-text">
+    Our mission is to bridge the gap between bachelors and essential services, creating a community where convenience and trust are paramount. With easy booking, transparent reviews, and continuous support, we strive to be your go-to partner for all your accommodation and food needs.
+  </p>
+
+  <div class="team-section">
+    <h2 class="team-header">Meet Our Team</h2>
+    <div class="team-grid">
+      <div class="team-member">
+        <img src="{% static 'images/maisha.jpg' %}" alt="Team Member">
+        <h4>Maisha Noor</h4>
+        <p>Founder</p>
+      </div>
+
+      <div class="team-member">
+        <img src="{% static 'images/ekra.jpg' %}" alt="Team Member">
+        <h4>Ekra Chowdhury Risha</h4>
+        <p>Founder</p>
+      </div>
+
+      <div class="team-member">
+        <img src="{% static 'images/udoy.jpg' %}" alt="Team Member">
+        <h4>Udoy Titus Rebeiro</h4>
+        <p>Founder</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

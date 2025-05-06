@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <div class="container">
+    <!-- Left section: Logo and Text -->
+    <div class="left-section">
+      <img src="{% static 'images/logo.png' %}" alt="Bachelor Point Logo" class="logo">
+    </div>
+
+    <!-- Right section: Text and Button -->
+    <div class="right-section">
+      <p class="prompt">Here for the first time?<br><strong>Create an Account</strong></p>
+      <div class="register-group">
+        <div class="arrow">➜</div>
+        <a href="{% url 'Register' %}" class="register-button">Register Now</a>
+          
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
