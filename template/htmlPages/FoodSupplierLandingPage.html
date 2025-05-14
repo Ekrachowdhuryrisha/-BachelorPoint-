@@ -155,15 +155,15 @@
 </style>
 
 <section class="tabs">
-  <a href="{% url 'FoodSupplierLandingPage' section='orders' %}" class="{% if section == 'orders' %}active{% endif %}">Orders</a>
-  <a href="{% url 'FoodSupplierLandingPage' section='bills' %}" class="{% if section == 'bills' %}active{% endif %}">Bills</a>
-  <a href="{% url 'FoodSupplierLandingPage' section='complaints' %}" class="{% if section == 'complaints' %}active{% endif %}">Complaints</a>
+  <a href="{% url 'FoodSupplierLandingPageSection' section='orders' %}" class="{% if section == 'orders' %}active{% endif %}">Orders</a>
+  <a href="{% url 'FoodSupplierLandingPageSection' section='bills' %}" class="{% if section == 'bills' %}active{% endif %}">Bills</a>
+  <a href="{% url 'FoodSupplierLandingPageSection' section='complaints' %}" class="{% if section == 'complaints' %}active{% endif %}">Complaints</a>
   <div class="notification">{{ orders.count }}</div>
 </section>
 
 <div class="food-buttons">
-  <a href="{% url 'FoodSupplierLandingPage' section='add-food' %}">Add Food</a>
-  <a href="{% url 'FoodSupplierLandingPage' section='delete-food' %}" class="delete">Delete Food</a>
+  <a href="{% url 'FoodSupplierLandingPageSection' section='add-food' %}">Add Food</a>
+  <a href="{% url 'FoodSupplierLandingPageSection' section='delete-food' %}" class="delete">Delete Food</a>
 </div>
 
 {% if section == 'orders' %}

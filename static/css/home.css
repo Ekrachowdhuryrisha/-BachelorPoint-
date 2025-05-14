@@ -2,7 +2,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #f9f3e7; /* Soft off-white */
+  background-color: #e9e0d0; /* Soft off-white */
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -22,10 +22,13 @@ body {
 }
 
 .logo {
-  height: 700px;
-  margin-right: 50px;
+  height: 200px;
+  width: auto; /* Maintain aspect ratio */
+  margin-right: 0; /* Remove margin since centering handles spacing */
+  margin-left:30px; /* Add margin to the left */
+  image-rendering: -webkit-optimize-contrast; /* For Chrome/Safari */
+  image-rendering: crisp-edges;
 }
-
 
 
 

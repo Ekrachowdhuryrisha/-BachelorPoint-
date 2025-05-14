@@ -51,7 +51,7 @@ def FoodSupplierLandingPage(request, section='orders'):
                 food_item.supplier = supplier
                 food_item.save()
                 messages.success(request, 'Food item added successfully and will be visible to bachelors.')
-                return redirect('FoodSupplierLandingPage', section='orders')
+                return redirect('FoodSupplierLandingPageSection', section='orders')
             else:
                 messages.error(request, 'Please fill all required fields correctly.')
         context = {'section': 'add-food', 'form': form}
@@ -62,14 +62,14 @@ def FoodSupplierLandingPage(request, section='orders'):
             food_id = request.POST.get('food_id')
             if not food_id or not food_id.isdigit():
                 messages.error(request, 'Invalid food ID.')
-                return redirect('FoodSupplierLandingPage', section='delete-food')
+                return redirect('FoodSupplierLandingPageSection', section='delete-food')
             if not AvailableFoods.objects.filter(id=food_id, supplier=supplier).exists():
                 messages.error(request, 'Food item not found or you do not have permission to delete it.')
-                return redirect('FoodSupplierLandingPage', section='delete-food')
+                return redirect('FoodSupplierLandingPageSection', section='delete-food')
             food = AvailableFoods.objects.get(id=food_id, supplier=supplier)
             food.delete()
             messages.success(request, 'Food item deleted successfully.')
-            return redirect('FoodSupplierLandingPage', section='delete-food')
+            return redirect('FoodSupplierLandingPageSection', section='delete-food')
         context = {'foods': foods, 'section': 'delete-food'}
     
     return render(request, 'htmlPages/FoodSupplierLandingPage.html', context)
