@@ -79,7 +79,7 @@ def HouseDetailsPage(request, property_id):
     if request.method == 'POST':
         tenant, created = Tenant.objects.get_or_create(user=request.user)
         booking = BookingRequest.objects.create(house=house, tenant=tenant)
-        return redirect(reverse('HouseOwnerLandingPage'))
+        return redirect(reverse('BachelorLandingPage'))
     return render(request, 'htmlPages/HouseDetailsPage.html', {'house': house})
 
 @login_required
@@ -156,9 +156,6 @@ def HouseOwnerLandingPage(request, section='bookings'):
 def UserDetailsPage(request):
     return render(request, template_name='htmlPages/UserDetailsPage.html')
     
-
-def UserDetailsPage(request):
-    return render(request, template_name='htmlPages/UserDetailsPage.html')
 
 @login_required
 def ProfilePage(request):
