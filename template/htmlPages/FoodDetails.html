@@ -60,11 +60,20 @@
   <p><strong>Details:</strong> {{ food.details }}</p>
   <p><strong>Duration:</strong> {{ food.duration }}</p>
   <p><strong>Meals per Day:</strong> {{ food.meals_per_day }}</p>
-  <p><strong>Price:</strong> {{ food.price }}</p>
+  <p><strong>Price:</strong> $<span id="price">{{ food.price|floatformat:2 }}</span></p>
   <form method="POST" class="order-form">
     {% csrf_token %}
-    <input type="number" name="quantity" min="1" value="1" required>
+    <input type="number" name="quantity" id="quantity" min="1" value="1" required>
     <button type="submit">Place Order</button>
   </form>
 </div>
+
+<script>
+  const unitPrice = {{ food.price|floatformat:2 }};
+  document.getElementById('quantity').addEventListener('input', function() {
+    const quantity = parseInt(this.value) || 1;
+    const totalPrice = (quantity * unitPrice).toFixed(2);
+    document.getElementById('price').textContent = totalPrice;
+  });
+</script>
 {% endblock %}

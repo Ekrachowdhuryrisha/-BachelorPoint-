@@ -255,6 +255,8 @@ def FoodDetails(request, food_id):
     if request.method == 'POST':
         quantity = request.POST.get('quantity')
         if quantity and quantity.isdigit() and int(quantity) > 0:
+            quantity = int(quantity)
+            total_price = food.price * quantity
             while True:
                 order_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
                 if not Order.objects.filter(order_id=order_id).exists():
@@ -263,7 +265,7 @@ def FoodDetails(request, food_id):
                 customer=request.user,
                 food=food,
                 order_id=order_id,
-                items=f"{food.name} (Quantity: {quantity})",
+                items=f"{food.name} (Quantity: {quantity}, Total Price: ${total_price:.2f})",
                 status='Pending'
             )
             messages.success(request, 'Order placed successfully. Awaiting supplier confirmation.')
