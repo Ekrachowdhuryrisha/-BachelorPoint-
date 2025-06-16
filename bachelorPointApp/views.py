@@ -33,13 +33,13 @@ def FoodSupplierLandingPage(request, section='orders'):
     
     context = {}
     if section == 'orders':
-        orders = Order.objects.filter(food__supplier__user=request.user).order_by('-created_at')
+        orders = Order.objects.filter(food__supplier__user = request.user).order_by('-created_at')
         context = {'orders': orders, 'section': 'orders'}
     elif section == 'bills':
-        bills = Bill.objects.filter(order__food__in=AvailableFoods.objects.all()).order_by('-created_at')
+        bills = Bill.objects.filter(order__food__in = AvailableFoods.objects.all()).order_by('-created_at')
         context = {'bills': bills, 'section': 'bills'}
     elif section == 'complaints':
-        complaints = Complaint.objects.filter(order__food__in=AvailableFoods.objects.all()).order_by('-created_at')
+        complaints = Complaint.objects.filter(order__food__in = AvailableFoods.objects.all()).order_by('-created_at')
         context = {'complaints': complaints, 'section': 'complaints'}
     elif section == 'add-food':
         form = AvailableFoodsForm()

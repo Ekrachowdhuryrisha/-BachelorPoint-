@@ -103,45 +103,50 @@
     margin-top: 5px;
     font-weight: bold;
   }
-  .add-food form {
-    max-width: 400px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
+
   .add-food .form-group {
-    margin-bottom: 1rem;
-  }
-  .add-food .form-group label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
-    color: #333;
-  }
-  .add-food .form-group input,
-  .add-food .form-group textarea,
-  .add-food .form-group input[type="file"] {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 1rem;
-  }
-  .add-food .form-group input[type="file"] {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.add-food form p label {
+  flex: 0 0 100px !important; /* Fixed width for labels */
+  margin-right: 1rem;
+  text-align: right;
+}
+
+.add-food form p input,
+.add-food form p textarea,
+.add-food form p input[type="file"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.add-food form p {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.add-food .form-group input[type="file"] {
     padding: 0.4rem 0;
-  }
-  .add-food button[type="submit"] {
+}
+.add-food button[type="submit"] {
     background: #4caf50;
     color: #fff;
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1.5rem;
+    align-items: center;
+    margin-left: 25%; /* Center the button */
     border: none;
     border-radius: 5px;
     font-weight: bold;
+    font-size:larger;
     cursor: pointer;
-    width: 100%;
+    width: 50%;
   }
   .add-food button[type="submit"]:hover {
     background: #45a049;
@@ -276,12 +281,10 @@
 
 <script>
   function updateBillStatus(billId, status) {
-    document.querySelector(`#bill-${billId} .status`).innerText = 'Status: ' + status;
-    // Optionally, send AJAX request to update backend
+    document.querySelector(`#bill-${billId} .status`).innerText = 'Status: ' + status;    
   }
   function updateComplaintStatus(complaintId, status) {
     document.querySelector(`#complaint-${complaintId} .status`).innerText = 'Status: ' + status;
-    // Optionally, send AJAX request to update backend
   }
 </script>
 {% endblock %}
