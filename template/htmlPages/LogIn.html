@@ -1,14 +1,20 @@
+{# Extending the base template that includes the common structure (header, footer, etc.) #}
 {% extends 'base.html' %}
 {% load static %}
 
+{# Setting the page title #}
 {% block title %}Login | Bachelor Point{% endblock %}
 
+{# Main content block starts #}
 {% block content %}
+
 <style>
+  /* Set the background color of the body */
   body {
     background-color: #d9d5cd;
   }
 
+  /* Container for centering the login box */
   .login-page {
     display: flex;
     justify-content: center;
@@ -17,12 +23,14 @@
     position: relative;
   }
 
+  /* Positioning and styling the logo on the left */
   .login-logo {
     position: absolute;
     left: 5%;
     max-width: 250px;
   }
 
+  /* Styling the login box */
   .login-container {
     background-color: white;
     border-radius: 25px;
@@ -33,12 +41,14 @@
     text-align: center;
   }
 
+  /* Login heading style */
   .login-container h2 {
     margin-bottom: 25px;
     font-size: 28px;
     font-weight: 700;
   }
 
+  /* Input field styling */
   .input-field {
     width: 100%;
     padding: 12px;
@@ -49,6 +59,7 @@
     font-size: 16px;
   }
 
+  /* 'Forgot password?' link styling */
   .forgot {
     display: block;
     margin-bottom: 20px;
@@ -57,6 +68,7 @@
     text-decoration: none;
   }
 
+  /* Button styling for login and register */
   .btn {
     width: 100%;
     padding: 12px;
@@ -69,21 +81,25 @@
     transition: background 0.3s;
   }
 
+  /* Hover effect on button */
   .btn:hover {
     background-color: #fbd460;
   }
 
+  /* Text above social login icons */
   .login-with {
     font-size: 14px;
     margin-bottom: 10px;
   }
 
+  /* Social media icon styling */
   .social-icons img {
     width: 35px;
     margin: 0 10px;
     cursor: pointer;
   }
 
+  /* Error message styling */
   .errorlist {
     color: red;
     font-size: 14px;
@@ -94,14 +110,21 @@
 </style>
 
 <div class="login-page">
+  {# Logo image on the left side #}
   <img src="{% static 'images/logo.png' %}" alt="Bachelor Point Logo" class="login-logo" />
+
   <div class="login-container">
     <h2>Log In</h2>
+
+    {# Displaying form errors if any exist #}
     {% if form.errors %}
       <ul class="errorlist">
+        {# Non-field-specific errors (e.g. invalid credentials) #}
         {% for error in form.non_field_errors %}
           <li>{{ error }}</li>
         {% endfor %}
+
+        {# Field-specific errors (e.g. "Username is required") #}
         {% for field in form %}
           {% for error in field.errors %}
             <li>{{ error }}</li>
@@ -109,23 +132,43 @@
         {% endfor %}
       </ul>
     {% endif %}
+
+    {# Login form starts here #}
     <form method="post">
       {% csrf_token %}
+
+      {# Username or email input field. Pre-fills previous value if available #}
       <input type="text" name="username" placeholder="Username or Email" class="input-field" value="{{ form.username.value|default:'' }}" required />
+
+      {# Password input field #}
       <input type="password" name="password" placeholder="Password" class="input-field" required />
+
+      {# "Forget password" link (currently inactive with href="#") #}
       <a href="#" class="forgot">Forget Password?</a>
+
+      {# Submit button for login #}
       <button type="submit" class="btn">Sign In</button>
     </form>
+
+    {# Button to go to the registration page #}
     <a href="{% url 'Register' %}">
       <button class="btn">Register</button>
     </a>
+
+    {# Social login section #}
     <p class="login-with">Log In With</p>
     <div class="social-icons">
+      {# Facebook login (link opens in a new tab) #}
       <a href="https://www.facebook.com/" target="_blank">
-      <img src="{% static 'images/facebook.png' %}" alt="Facebook" /></a>
+        <img src="{% static 'images/facebook.png' %}" alt="Facebook" />
+      </a>
+
+      {# Google login (link opens in a new tab) #}
       <a href="https://account.google.com/" target="_blank">
-      <img src="{% static 'images/gmail.png' %}" alt="Gmail" /></a>
+        <img src="{% static 'images/gmail.png' %}" alt="Gmail" />
+      </a>
     </div>
   </div>
 </div>
+
 {% endblock %}

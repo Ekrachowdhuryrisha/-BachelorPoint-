@@ -1,7 +1,13 @@
+{# Extending the base layout template #}
 {% extends 'base.html' %}
+
+{# Setting the page title for the browser tab #}
 {% block title %}Food Details{% endblock %}
+
+{# Main content of the page begins #}
 {% block content %}
 <style>
+  /* Styling for the container that holds all food details */
   .food-details-container {
     max-width: 800px;
     margin: 20px auto;
@@ -10,24 +16,34 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+
+  /* Style for the food image */
   .food-details-container img {
     width: 100%;
     height: 300px;
     object-fit: cover;
     border-radius: 12px;
   }
+
+  /* Title styling */
   .food-details-container h2 {
     font-size: 1.5rem;
     margin: 1rem 0;
   }
+
+  /* Paragraph styling for text details */
   .food-details-container p {
     font-size: 1rem;
     color: #555;
     margin: 0.5rem 0;
   }
+
+  /* Styling for the form section */
   .order-form {
     margin-top: 1rem;
   }
+
+  /* Input box styling */
   .order-form input {
     padding: 0.5rem;
     margin-right: 1rem;
@@ -35,6 +51,8 @@
     border-radius: 4px;
     font-size: 1rem;
   }
+
+  /* Submit button styling */
   .order-form button {
     padding: 0.75rem 1.5rem;
     background-color: #ff9800;
@@ -44,9 +62,13 @@
     font-weight: bold;
     cursor: pointer;
   }
+
+  /* Button hover effect */
   .order-form button:hover {
     background-color: #f57c00;
   }
+
+  /* Optional message section */
   .message {
     margin-top: 1rem;
     font-size: 1rem;
@@ -54,22 +76,32 @@
 </style>
 
 <div class="food-details-container">
+  {# Display the food image with fallback alt text #}
   <img src="{{ food.image.url }}" alt="{{ food.name }}">
+
+  {# Food name as heading #}
   <h2>{{ food.name }}</h2>
+
+  {# Food details shown as labeled paragraphs #}
   <p><strong>Location:</strong> {{ food.location }}</p>
   <p><strong>Details:</strong> {{ food.details }}</p>
   <p><strong>Duration:</strong> {{ food.duration }}</p>
   <p><strong>Meals per Day:</strong> {{ food.meals_per_day }}</p>
+
+  {# Display price, which updates dynamically based on quantity #}
   <p><strong>Price:</strong> $<span id="price">{{ food.price|floatformat:2 }}</span></p>
+
+  {# Order form starts here; POST method used for security and state #}
   <form method="POST" class="order-form">
-    {% csrf_token %}
+    {% csrf_token %} {# Security token to prevent CSRF attacks #}
     <input type="number" name="quantity" id="quantity" min="1" value="1" required>
     <button type="submit">Place Order</button>
   </form>
 </div>
 
+{# JavaScript to dynamically calculate and update total price based on quantity #}
 <script>
-  const unitPrice = {{ food.price|floatformat:2 }};
+  const unitPrice = parseFloat("{{ food.price|floatformat:2 }}");
   document.getElementById('quantity').addEventListener('input', function() {
     const quantity = parseInt(this.value) || 1;
     const totalPrice = (quantity * unitPrice).toFixed(2);

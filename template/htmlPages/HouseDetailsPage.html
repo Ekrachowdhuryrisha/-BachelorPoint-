@@ -1,6 +1,10 @@
+{# Extend the base layout which contains common HTML structure (header, footer, etc.) #}
 {% extends 'base.html' %}
+
+{# Begin the content block that fills into base.html #}
 {% block content %}
 <style>
+  /* Main container for the house detail content */
   .details-container {
     max-width: 800px;
     margin: 2rem auto;
@@ -8,15 +12,21 @@
     background: #e0e0e0;
     border-radius: 8px;
   }
+
+  /* Styles for displaying house images side by side */
   .house-images img {
     width: 200px;
     height: 200px;
-    object-fit: cover;
+    object-fit: cover; /* Ensures images fit nicely in square box */
     margin-right: 1rem;
   }
+
+  /* Margin above the booking form */
   .book-form {
     margin-top: 1rem;
   }
+
+  /* Styling the booking button */
   .book-btn {
     background: #4caf50;
     color: white;
@@ -25,23 +35,36 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+  /* Hover effect for the booking button */
   .book-btn:hover {
     background: #45a049;
   }
 </style>
 
 <div class="details-container">
+  {# Display the name/title of the house #}
   <h2>{{ house.House_name }}</h2>
+
+  {# Container for house images. Displays image1 by default, image2 and image3 if available #}
   <div class="house-images">
     <img src="{{ house.image1.url }}" alt="Image 1">
-    {% if house.image2 %}<img src="{{ house.image2.url }}" alt="Image 2">{% endif %}
-    {% if house.image3 %}<img src="{{ house.image3.url }}" alt="Image 3">{% endif %}
+    {% if house.image2 %}
+      <img src="{{ house.image2.url }}" alt="Image 2">
+    {% endif %}
+    {% if house.image3 %}
+      <img src="{{ house.image3.url }}" alt="Image 3">
+    {% endif %}
   </div>
+
+  {# Display various house details pulled from the house object #}
   <p><strong>Property ID:</strong> {{ house.Property_id }}</p>
   <p><strong>Location:</strong> {{ house.Location }}</p>
   <p><strong>Category:</strong> {{ house.Category }}</p>
   <p><strong>Price:</strong> {{ house.Price }} BDT</p>
   <p><strong>Availability:</strong> {{ house.Availability }}</p>
+
+  {# Booking form with POST method, protected by CSRF token #}
   <form method="post" class="book-form">
     {% csrf_token %}
     <button type="submit" class="book-btn">Book Now</button>

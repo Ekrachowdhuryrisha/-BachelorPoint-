@@ -1,8 +1,15 @@
+{# Extend the base layout (common header/footer structure) #}
 {% extends 'base.html' %}
+
+{# Set the page title that will appear in the browser tab #}
 {% block title %}Contact Us{% endblock %}
+
+{# Begin the main content block of the page #}
 {% block content %}
 
+{# ========== Inline CSS for Styling the Contact Page ========== #}
 <style>
+  /* Container that wraps the entire contact content */
   .contact-container {
     max-width: 800px;
     margin: 0 auto;
@@ -10,6 +17,7 @@
     font-family: Arial, sans-serif;
   }
 
+  /* Heading for the contact form */
   .contact-header {
     text-align: center;
     font-size: 2.5rem;
@@ -17,6 +25,7 @@
     color: #333;
   }
 
+  /* Description text shown below the heading */
   .contact-text {
     text-align: center;
     font-size: 1.1rem;
@@ -24,12 +33,14 @@
     margin-bottom: 30px;
   }
 
+  /* Style the form as a vertical stack */
   form {
     display: flex;
     flex-direction: column;
     gap: 15px;
   }
 
+  /* Style input fields and textarea */
   input, textarea {
     padding: 12px;
     border: 1px solid #ccc;
@@ -38,6 +49,7 @@
     width: 100%;
   }
 
+  /* Style for the submit button */
   button.submit {
     padding: 12px;
     font-size: 1rem;
@@ -49,15 +61,24 @@
     font-weight: bold;
   }
 
+  /* Hover effect on submit button */
   button.submit:hover {
     opacity: 0.9;
   }
 </style>
 
+{# ========== Contact Form Content ========== #}
 <div class="contact-container">
+  
+  {# Heading of the contact section #}
   <h1 class="contact-header">Contact Us</h1>
-  <p class="contact-text">Have questions or need support? Fill out the form below and we'll get back to you as soon as possible.</p>
 
+  {# Introductory text for the form #}
+  <p class="contact-text">
+    Have questions or need support? Fill out the form below and we'll get back to you as soon as possible.
+  </p>
+
+  {# Contact form starts here, POST method with CSRF protection #}
   <form method="post">
     {% csrf_token %}
     <input type="text" name="name" placeholder="Your Name" required>

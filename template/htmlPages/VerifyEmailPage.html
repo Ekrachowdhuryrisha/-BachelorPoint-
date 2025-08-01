@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- CSS styles for the OTP verification page -->
 <style>
+  /* Main container for OTP verification, centered with background color */
   .otp-container {
     display: flex;
     justify-content: center;
@@ -10,6 +12,7 @@
     background-color: #f9f5ee;
   }
 
+  /* Styling for the OTP form box */
   .otp-box {
     background-color: white;
     padding: 40px;
@@ -19,18 +22,21 @@
     max-width: 400px;
   }
 
+  /* Styling for the form title */
   .otp-box h2 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
   }
 
+  /* Label styling for the OTP input */
   .otp-box label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
   }
 
+  /* Styling for the OTP input field */
   .otp-box input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -40,6 +46,7 @@
     margin-bottom: 20px;
   }
 
+  /* Styling for the submit button */
   .otp-box button {
     width: 100%;
     padding: 10px;
@@ -51,19 +58,26 @@
     cursor: pointer;
   }
 
+  /* Hover effect for the submit button */
   .otp-box button:hover {
     background-color: #2952a3;
   }
 </style>
 
+<!-- Main container for OTP verification -->
 <div class="otp-container">
+  <!-- Box containing the OTP verification form -->
   <div class="otp-box">
+    <!-- Form title -->
     <h2>Email Verification</h2>
+    <!-- Form for submitting OTP -->
     <form method="post">
       {% csrf_token %}
+      <!-- Label and input field for OTP -->
       <label for="otp">Enter the OTP sent to your email:</label>
       <input type="text" id="otp" name="otp" required>
-        <button type="submit">Submit</button>
+      <!-- Submit button for the form -->
+      <button type="submit">Submit</button>
     </form>
   </div>
 </div>

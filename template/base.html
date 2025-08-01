@@ -1,45 +1,51 @@
 {% load static %}
 
-
+<!-- Document type declaration and HTML structure -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tag for character encoding -->
     <meta charset="UTF-8">
+    <!-- Page title -->
     <title>Title</title>
+    <!-- Link to external CSS file for styling -->
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    
 </head>
 <body>
-
+    <!-- Main wrapper for the page layout -->
     <div class="page-wrapper">
-      {% include 'navbar.html' %}
-  
-      <main class="page-content">
-        {% block content %}
-        
-        {% endblock %}
-      </main>
-      {% include 'footer.html' %}
+        <!-- Include navigation bar -->
+        {% include 'navbar.html' %}
+
+        <!-- Main content area, flexible for block content -->
+        <main class="page-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <!-- Include footer -->
+        {% include 'footer.html' %}
     </div>
-  </body>
-  </html>
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  .page-content {
-    flex: 1;
-  }
-</style>
 
+    <!-- CSS styles for layout -->
+    <style>
+        /* Ensure full height for HTML and body */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
+        /* Flexbox layout for the page wrapper */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
+        /* Ensure main content takes up remaining space */
+        .page-content {
+            flex: 1;
+        }
+    </style>
+</body>
+</html>

@@ -2,7 +2,25 @@
 {% load static %}
 {% block title %}Bachelor Dashboard{% endblock %}
 {% block content %}
+<!-- 
+Documentation:
+This template defines the Bachelor Dashboard, a web interface for users to view their profile and browse available houses and food items. It extends a base.html template and includes:
+- A main container with a profile card and sections for houses and food.
+- A profile card displaying user email and a link to the profile page.
+- Scrollable sections for houses and food, each with cards showing details and action buttons.
+- Styling is applied using CSS for a responsive, modern layout with smooth scrolling.
+- JavaScript provides functionality for scrolling through the house and food containers.
+- The template uses Django template tags for dynamic content rendering and static file loading.
+-->
+
 <style>
+  /* 
+  Styling for the dashboard layout, ensuring a clean and responsive design.
+  - Uses flexbox for the main container to arrange profile card and content side by side.
+  - Defines styles for profile card, house/food cards, scrollable containers, and buttons.
+  - Hides scrollbars for a cleaner look and adds smooth scrolling behavior.
+  - Includes hover effects for buttons and a scroll arrow for navigation.
+  */
   .main-container {
     display: flex;
     background-color: #fef1db;
@@ -153,8 +171,17 @@
     padding: 4px 10px;
   }
 </style>
+
+<!-- 
+Main container: Organizes the profile card and rooms/food sections side by side.
+- Uses flexbox to ensure responsive layout across different screen sizes.
+-->
 <div class="main-container">
-  <!-- Profile Card -->
+  <!-- 
+  Profile Card: Displays user information and a link to the profile page.
+  - Shows a profile icon, user email, and a link to the 'ProfilePage' URL.
+  - Styled as a fixed-width card with a clean, white background.
+  -->
   <div class="profile-card">
     <h2>Profile</h2>
     <div class="profile-icon">👤</div>
@@ -162,9 +189,17 @@
     <a href="{% url 'ProfilePage' %}">My Profile</a><br>
   </div>
 
-  <!-- Room and Food Sections -->
+  <!-- 
+  Rooms and Food Wrapper: Contains scrollable sections for houses and food.
+  - Uses a flex column layout to stack the houses and food sections vertically.
+  -->
   <div class="rooms-food-wrapper">
-    <!-- Houses -->
+    <!-- 
+    Houses Section: Displays a scrollable list of available houses.
+    - Each house is shown in a card with an image, name, location, price, and a book button.
+    - Includes a scroll arrow button to navigate through the list.
+    - Uses Django templating to loop through houses and handle empty states.
+    -->
     <div class="scrollable-section">
       <div class="section-title">Available Houses</div>
       <div class="scrollable-container" id="housesContainer">
@@ -175,21 +210,24 @@
           </div>
           <div class="house-info">
             <h3>{{ house.House_name }}</h3>
-            
             <p>Location: {{ house.Location }}</p>
-          
             <p>Price: {{ house.Price }} BDT</p>
             <a href="{% url 'HouseDetailsPage' property_id=house.Property_id %}" class="book-btn">Book Now</a>
           </div>
         </div>
-      {% empty %}
+        {% empty %}
         <p>No houses available.</p>
-      {% endfor %}
+        {% endfor %}
       </div>
       <button class="scroll-arrow" onclick="scrollRight('housesContainer')">›</button>
     </div>
 
-    <!-- Foods -->
+    <!-- 
+    Foods Section: Displays a scrollable list of available food items.
+    - Each food item is shown in a card with an image, name, location, details, and an order button.
+    - Includes a scroll arrow button to navigate through the list.
+    - Uses Django templating to loop through food items and handle empty states.
+    -->
     <div class="scrollable-section">
       <div class="section-title">Available Foods</div>
       <div class="scrollable-container" id="foodsContainer">
@@ -209,7 +247,12 @@
     </div>
   </div>
 </div>
-     
+
+<!-- 
+JavaScript: Provides scrolling functionality for the house and food containers.
+- scrollRight: Scrolls the specified container horizontally by 300 pixels with smooth behavior.
+- Triggered by clicking the scroll arrow buttons in the houses and foods sections.
+-->
 <script>
   function scrollRight(containerId) {
     const container = document.getElementById(containerId);

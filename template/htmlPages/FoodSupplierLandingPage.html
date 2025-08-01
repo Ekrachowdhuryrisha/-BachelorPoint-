@@ -1,7 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}Food Supplier Dashboard{% endblock %}
 {% block content %}
+<!-- 
+Documentation:
+This template defines the Food Supplier Dashboard, a web interface for food suppliers to manage orders, bills, complaints, and food items. It extends a base.html template and includes:
+- A tabbed navigation system for switching between Orders, Bills, and Complaints sections.
+- Buttons to add or delete food items.
+- Sections for displaying orders, bills, complaints, adding food items, and deleting food items.
+- Each section contains cards with relevant information and action buttons.
+- Styling is applied using CSS for a clean, responsive layout.
+- JavaScript functions handle client-side status updates for bills and complaints.
+- The template uses Django template tags for dynamic content rendering and form handling.
+-->
+
 <style>
+  /* 
+  Styling for the dashboard layout, ensuring a consistent look and feel.
+  - Sets a light background and sans-serif font for the body.
+  - Defines styles for tabs, buttons, cards, forms, and notifications.
+  - Uses flexbox for responsive layout of cards and form elements.
+  - Includes hover effects and distinct colors for action buttons (accept, decline, chat).
+  */
   body {
     background: #fdf8e7;
     font-family: sans-serif;
@@ -103,39 +122,35 @@
     margin-top: 5px;
     font-weight: bold;
   }
-
   .add-food .form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.add-food form p label {
-  flex: 0 0 100px !important; /* Fixed width for labels */
-  margin-right: 1rem;
-  text-align: right;
-}
-
-.add-food form p input,
-.add-food form p textarea,
-.add-food form p input[type="file"] {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 1rem;
-}
-
-.add-food form p {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-.add-food .form-group input[type="file"] {
+    display: flexopolis;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .add-food form p label {
+    flex: 0 0 100px !important; /* Fixed width for labels */
+    margin-right: 1rem;
+    text-align: right;
+  }
+  .add-food form p input,
+  .add-food form p textarea,
+  .add-food form p input[type="file"] {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  .add-food form p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .add-food .form-group input[type="file"] {
     padding: 0.4rem 0;
-}
-.add-food button[type="submit"] {
+  }
+  .add-food button[type="submit"] {
     background: #4caf50;
     color: #fff;
     padding: 0.5rem 1.5rem;
@@ -144,7 +159,7 @@
     border: none;
     border-radius: 5px;
     font-weight: bold;
-    font-size:larger;
+    font-size: larger;
     cursor: pointer;
     width: 50%;
   }
@@ -159,6 +174,12 @@
   }
 </style>
 
+<!-- 
+Navigation tabs for switching between Orders, Bills, and Complaints.
+- Uses Django URL routing to link to different sections.
+- Highlights the active tab based on the current section.
+- Displays a notification badge with the number of orders.
+-->
 <section class="tabs">
   <a href="{% url 'FoodSupplierLandingPageSection' section='orders' %}" class="{% if section == 'orders' %}active{% endif %}">Orders</a>
   <a href="{% url 'FoodSupplierLandingPageSection' section='bills' %}" class="{% if section == 'bills' %}active{% endif %}">Bills</a>
@@ -166,11 +187,21 @@
   <div class="notification">{{ orders.count }}</div>
 </section>
 
+<!-- 
+Buttons to navigate to Add Food and Delete Food sections.
+- Styled to match the dashboard theme with distinct colors for add (green) and delete (red) actions.
+-->
 <div class="food-buttons">
   <a href="{% url 'FoodSupplierLandingPageSection' section='add-food' %}">Add Food</a>
   <a href="{% url 'FoodSupplierLandingPageSection' section='delete-food' %}" class="delete">Delete Food</a>
 </div>
 
+<!-- 
+Orders section: Displays a list of orders with details and actions.
+- Each order is shown in a card with customer info, items, time, and status.
+- Includes forms for accepting or declining orders, and a chat button.
+- Uses Django templating to loop through orders and handle empty states.
+-->
 {% if section == 'orders' %}
 <section class="orders">
   <h2>New Orders ({{ orders.count }})</h2>
@@ -201,11 +232,17 @@
   <p>No orders available.</p>
   {% endfor %}
 </section>
+
+<!-- 
+Bills section: Displays a list of bills with details and actions.
+- Each bill card shows the order ID, amount, creation date, and status.
+- Includes a button to mark bills as paid, with client-side status update.
+-->
 {% elif section == 'bills' %}
 <section class="bills">
   <h2>Bills</h2>
   {% for bill in bills %}
-  <div class="bill-card">
+  <div class="bill-card" id="bill-{{ bill.id }}">
     <div class="bill-info">
       <h4>Bill for Order #{{ bill.order.order_id }}</h4>
       <p>Amount: ${{ bill.amount }}</p>
@@ -220,11 +257,17 @@
   <p>No bills available.</p>
   {% endfor %}
 </section>
+
+<!-- 
+Complaints section: Displays a list of customer complaints.
+- Each complaint card shows the complaint ID, customer, order (if applicable), description, and status.
+- Includes buttons to resolve or close complaints, with client-side status updates.
+-->
 {% elif section == 'complaints' %}
 <section class="complaints">
   <h2>Complaints</h2>
   {% for complaint in complaints %}
-  <div class="complaint-card">
+  <div class="complaint-card" id="complaint-{{ complaint.id }}">
     <div class="complaint-info">
       <h4>Complaint #{{ complaint.id }}</h4>
       <p>Customer: {{ complaint.customer.username }}</p>
@@ -241,6 +284,12 @@
   <p>No complaints available.</p>
   {% endfor %}
 </section>
+
+<!-- 
+Add Food section: Provides a form to add new food items.
+- Uses Django form rendering with file upload support (enctype="multipart/form-data").
+- Displays success or error messages based on form submission results.
+-->
 {% elif section == 'add-food' %}
 <section class="add-food">
   <h2>Add New Food Item</h2>
@@ -255,6 +304,12 @@
   {% endfor %}
   {% endif %}
 </section>
+
+<!-- 
+Delete Food section: Lists food items with an option to delete them.
+- Each food card displays the name, location, and details of the food item.
+- Includes a form with a delete button for each item.
+-->
 {% elif section == 'delete-food' %}
 <section class="delete-food">
   <h2>Delete Food Items</h2>
@@ -279,6 +334,11 @@
 </section>
 {% endif %}
 
+<!-- 
+JavaScript functions for client-side status updates.
+- updateBillStatus: Updates the displayed status of a bill when marked as paid.
+- updateComplaintStatus: Updates the displayed status of a complaint when resolved or closed.
+-->
 <script>
   function updateBillStatus(billId, status) {
     document.querySelector(`#bill-${billId} .status`).innerText = 'Status: ' + status;    

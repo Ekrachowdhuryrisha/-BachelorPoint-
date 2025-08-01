@@ -1,9 +1,18 @@
+{# Extend from base.html to reuse common layout (like navbar, footer, etc.) #}
 {% extends 'base.html' %}
+
+{# Load the static tag so static image paths can be used (for team member photos) #}
 {% load static %}
+
+{# Set the browser tab title for the page #}
 {% block title %}About Us{% endblock %}
+
+{# Begin the main content of the page #}
 {% block content %}
 
+{# ===== Styling Section for About Page ===== #}
 <style>
+  /* Container wrapping all about page content */
   .about-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -12,12 +21,14 @@
     font-family: Arial, sans-serif;
   }
 
+  /* Main heading style */
   .about-header {
     font-size: 2.5rem;
     margin-bottom: 20px;
     color: #333;
   }
 
+  /* Paragraph styles */
   .about-text {
     font-size: 1.1rem;
     line-height: 1.6;
@@ -25,16 +36,19 @@
     margin-bottom: 30px;
   }
 
+  /* Team section wrapper */
   .team-section {
     margin-top: 40px;
   }
 
+  /* Team heading */
   .team-header {
     font-size: 2rem;
     margin-bottom: 20px;
     color: #333;
   }
 
+  /* Grid layout for team members */
   .team-grid {
     display: flex;
     flex-wrap: wrap;
@@ -42,6 +56,7 @@
     justify-content: center;
   }
 
+  /* Individual team member card */
   .team-member {
     background: #fff;
     border-radius: 10px;
@@ -51,6 +66,7 @@
     text-align: center;
   }
 
+  /* Team member image styling */
   .team-member img {
     width: 100px;
     height: 100px;
@@ -59,51 +75,68 @@
     margin-bottom: 10px;
   }
 
+  /* Team member name */
   .team-member h4 {
     margin: 10px 0 5px;
     font-size: 1.2rem;
     color: #333;
   }
 
+  /* Team member role */
   .team-member p {
     font-size: 0.95rem;
     color: #777;
   }
 </style>
 
+{# ===== About Section Content ===== #}
 <div class="about-container">
+
   <h1 class="about-header">About Bachelor Point</h1>
+
+  {# First paragraph describing the purpose of the platform #}
   <p class="about-text">
     Bachelor Point is dedicated to making the lives of bachelors easier by providing a seamless platform to find housing, food services, and other essential amenities. Whether you are new to the city or looking for a better place to live, we connect you with trusted service providers and verified listings to ensure a comfortable and hassle-free experience.
   </p>
 
+  {# Second paragraph highlighting the mission of the platform #}
   <p class="about-text">
     Our mission is to bridge the gap between bachelors and essential services, creating a community where convenience and trust are paramount. With easy booking, transparent reviews, and continuous support, we strive to be your go-to partner for all your accommodation and food needs.
   </p>
 
+  {# ===== Team Member Section ===== #}
   <div class="team-section">
+
+    {# Heading for the team section #}
     <h2 class="team-header">Meet Our Team</h2>
+
+    {# Grid container holding team member cards #}
     <div class="team-grid">
+
+      {# Team Member 1: Maisha Noor #}
       <div class="team-member">
         <img src="{% static 'images/maisha.jpg' %}" alt="Team Member">
         <h4>Maisha Noor</h4>
         <p>Founder</p>
       </div>
 
+      {# Team Member 2: Ekra Chowdhury Risha #}
       <div class="team-member">
         <img src="{% static 'images/ekra.jpg' %}" alt="Team Member">
         <h4>Ekra Chowdhury Risha</h4>
         <p>Founder</p>
       </div>
 
+      {# Team Member 3: Udoy Titus Rebeiro #}
       <div class="team-member">
         <img src="{% static 'images/udoy.jpg' %}" alt="Team Member">
         <h4>Udoy Titus Rebeiro</h4>
         <p>Founder</p>
       </div>
 
-    </div>
-  </div>
-</div>
+    </div>  {# End of .team-grid #}
+  </div>  {# End of .team-section #}
+
+</div>  {# End of .about-container #}
 
 {% endblock %}

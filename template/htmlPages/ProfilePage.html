@@ -2,52 +2,11 @@
 {% load static %}
 
 {% block content %}
-<div class="profile-container">
-  <div class="profile-card">
-    <form id="form-submit" action="" method="POST" enctype="multipart/form-data" class="profile-info">    
-    
-      {% csrf_token %}
-    <div class="profile-photo-section">
-      {% if user.profile.image %}
-        <img src="{{ user.profile.image.url }}" alt="Profile Photo" class="profile-photo" id="profileImage">
-      {% else %}
-        <img src="{% static 'images/profile-icon' %}" alt="No Profile Photo" class="profile-photo" id="profileImage">
-      {% endif %}
-
-      <div class="photo-buttons">
-        <input type="file" id="uploadPhoto" name="image" accept="image/*" style="display: none;">
-
-        <button type="button" onclick="document.getElementById('uploadPhoto').click()">Add Photo</button>
-        <button type="button" onclick="removePhoto()">Delete Photo</button>
-      </div>
-    </div>
-
-      <div class="info-row"><label>Name:</label><input type="text" name="name" value="{{ profile.name }}"></div>
-      <div class="info-row"><label>Email:</label><input type="email" value="{{ user.email }}" readonly></div>
-      <div class="info-row"><label>Mobile No.:</label><input type="text" name="mobile" value="{{ user.profile.mobile }}"></div>
-      <div class="info-row"><label>Gender:</label><input type="text" name="gender" value="{{ user.profile.gender }}"></div>
-      <div class="info-row"><label>Date of Birth:</label><input type="date" name="dob" value="{{ user.profile.dob|date:'Y-m-d' }}"></div>
-      <div class="info-row"><label>Profession:</label><input type="text" name="profession" value="{{ user.profile.profession }}"></div>
-      <div class="info-row"><label>Address:</label><input type="text" name="address" value="{{ user.profile.address }}"></div>
-      <div class="info-row"><label>Blood Group:</label><input type="text" name="blood_group" value="{{ user.profile.blood_group }}"></div>
-
-      <input type="hidden" name="image_changed" id="imageChanged" value="true">
-      <button type="submit" id="form-submit" class="save-button">Save Changes</button>
-    </form>
-  </div>
-</div>
-<script>
-document.getElementById('uploadPhoto').addEventListener('change', function (e) {
-  const file = e.target.files[0];
-  if (file) {
-    document.getElementById('profileImage').src = URL.createObjectURL(file);
-    document.getElementById('imageChanged').value = 'true';
-  }
-});
 
 
-</script>
+<!-- CSS styles for the profile page -->
 <style>
+  /* Main container styling */
   .profile-container {
     max-width: 800px;
     margin: 30px auto;
@@ -58,12 +17,14 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     font-family: 'Segoe UI', sans-serif;
   }
 
+  /* Profile card layout */
   .profile-card {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
+  /* Profile photo section styling */
   .profile-photo-section {
     display: flex;
     flex-direction: column;
@@ -71,6 +32,7 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     margin-bottom: 25px;
   }
 
+  /* Profile photo image styling */
   .profile-photo {
     width: 130px;
     height: 130px;
@@ -80,11 +42,13 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     margin-bottom: 10px;
   }
 
+  /* Photo buttons container */
   .photo-buttons {
     display: flex;
     gap: 10px;
   }
 
+  /* Styling for photo upload/delete buttons */
   .photo-buttons button {
     padding: 6px 14px;
     border: none;
@@ -96,14 +60,17 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     transition: background-color 0.2s;
   }
 
+  /* Hover effect for photo buttons */
   .photo-buttons button:hover {
     background-color: #2980b9;
   }
 
+  /* Profile form styling */
   .profile-info {
     width: 100%;
   }
 
+  /* Styling for each input row */
   .info-row {
     display: flex;
     align-items: center;
@@ -111,12 +78,14 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     justify-content: space-between;
   }
 
+  /* Label styling for input fields */
   .info-row label {
     width: 130px;
     font-weight: 600;
     color: #444;
   }
 
+  /* Input field styling */
   .info-row input {
     flex: 1;
     padding: 8px 10px;
@@ -126,6 +95,7 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     background-color: #f9f9f9;
   }
 
+  /* Save button styling */
   .save-button {
     width: 100%;
     padding: 10px;
@@ -140,10 +110,12 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     transition: background-color 0.2s;
   }
 
+  /* Hover effect for save button */
   .save-button:hover {
     background-color: #27ae60;
   }
 
+  /* Responsive design for smaller screens */
   @media (max-width: 600px) {
     .info-row {
       flex-direction: column;
@@ -160,5 +132,65 @@ document.getElementById('uploadPhoto').addEventListener('change', function (e) {
     }
   }
 </style>
+
+<!-- Main container for the profile section -->
+<div class="profile-container">
+  <!-- Card to hold profile form and photo -->
+  <div class="profile-card">
+    <!-- Form for submitting profile updates, including file upload for profile photo -->
+    <form id="form-submit" action="" method="POST" enctype="multipart/form-data" class="profile-info">    
+      {% csrf_token %}
+      <!-- Section for profile photo display and upload/delete buttons -->
+      <div class="profile-photo-section">
+        {% if user.profile.image %}
+          <!-- Display user's profile photo if available -->
+          <img src="{{ user.profile.image.url }}" alt="Profile Photo" class="profile-photo" id="profileImage">
+        {% else %}
+          <!-- Display default profile icon if no photo is set -->
+          <img src="{% static 'images/profile-icon' %}" alt="No Profile Photo" class="profile-photo" id="profileImage">
+        {% endif %}
+
+        <!-- Buttons for adding or deleting profile photo -->
+        <div class="photo-buttons">
+          <!-- Hidden file input for photo upload, triggered by 'Add Photo' button -->
+          <input type="file" id="uploadPhoto" name="image" accept="image/*" style="display: none;">
+          <!-- Button to trigger file input for uploading a new photo -->
+          <button type="button" onclick="document.getElementById('uploadPhoto').click()">Add Photo</button>
+          <!-- Button to remove the current profile photo -->
+          <button type="button" onclick="removePhoto()">Delete Photo</button>
+        </div>
+      </div>
+
+      <!-- Input fields for user profile information -->
+      <div class="info-row"><label>Name:</label><input type="text" name="name" value="{{ profile.name }}"></div>
+      <div class="info-row"><label>Email:</label><input type="email" value="{{ user.email }}" readonly></div>
+      <div class="info-row"><label>Mobile No.:</label><input type="text" name="mobile" value="{{ user.profile.mobile }}"></div>
+      <div class="info-row"><label>Gender:</label><input type="text" name="gender" value="{{ user.profile.gender }}"></div>
+      <div class="info-row"><label>Date of Birth:</label><input type="date" name="dob" value="{{ user.profile.dob|date:'Y-m-d' }}"></div>
+      <div class="info-row"><label>Profession:</label><input type="text" name="profession" value="{{ user.profile.profession }}"></div>
+      <div class="info-row"><label>Address:</label><input type="text" name="address" value="{{ user.profile.address }}"></div>
+      <div class="info-row"><label>Blood Group:</label><input type="text" name="blood_group" value="{{ user.profile.blood_group }}"></div>
+
+      <!-- Hidden input to track if the profile image has changed -->
+      <input type="hidden" name="image_changed" id="imageChanged" value="true">
+      <!-- Submit button to save profile changes -->
+      <button type="submit" id="form-submit" class="save-button">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript to handle profile photo upload preview -->
+<script>
+  // Add event listener to file input for photo upload
+  document.getElementById('uploadPhoto').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      // Update profile image preview with selected file
+      document.getElementById('profileImage').src = URL.createObjectURL(file);
+      // Set hidden input to indicate image change
+      document.getElementById('imageChanged').value = 'true';
+    }
+  });
+</script>
 
 {% endblock %}
